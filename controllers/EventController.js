@@ -1,0 +1,91 @@
+const Event = require('../models/EventModel')
+const mongoose = require('mongoose')
+
+//Get Data
+const getData = async (req, res) => {
+    const data = await Event.find({}).sort({createdAt: -1})
+    res.status(200).json(data)
+}
+
+//Get Single Data
+const getDataById = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Event.find({_id: id})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
+//Post Data
+const storeData = async (req, res) => {
+    const {name, start_date, end_date, image} = req.body
+
+    // const startDate = new Date(start_date);
+    // const endDate = new Date(end_date);
+
+    try {
+        // const event = await Event.create({
+        //     name, 
+        //     start_date: startDate.toISOString(), 
+        //     end_date: endDate.toISOString(), 
+        //     image})
+        // res.status(200).json(event) 
+        const event = await Event.create({...req.body})
+        res.status(200).json(event) 
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+
+}
+
+//Delete Data
+const deleteData = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Event.findOneAndDelete({_id: id})
+
+    if (!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json({message: 'Successfully Deleted'})
+}
+
+//Update Data
+const updateData = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Event.findOneAndUpdate({_id: id}, {
+        ...req.body
+    })
+
+    if (!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json({message: 'Successfully Updated'})
+}
+
+module.exports = {
+    getData,
+    getDataById,
+    storeData,
+    deleteData,
+    updateData
+}
