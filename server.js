@@ -9,6 +9,14 @@ const port = process.env.PORT
 // Express app
 const app = express()
 
+// Enable CORS
+const cors = require('cors');
+
+//Security
+app.use(cors({
+    origin: 'http://localhost:5173', // Allow only your frontend domain
+}));
+
 // Middleware
 app.use(express.json())
 
