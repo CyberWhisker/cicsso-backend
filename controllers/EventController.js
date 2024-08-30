@@ -26,18 +26,7 @@ const getDataById = async (req, res) => {
 
 //Post Data
 const storeData = async (req, res) => {
-    const {name, start_date, end_date, image} = req.body
-
-    // const startDate = new Date(start_date);
-    // const endDate = new Date(end_date);
-
     try {
-        // const event = await Event.create({
-        //     name, 
-        //     start_date: startDate.toISOString(), 
-        //     end_date: endDate.toISOString(), 
-        //     image})
-        // res.status(200).json(event) 
         const event = await Event.create({...req.body})
         res.status(200).json(event) 
     } catch (error) {

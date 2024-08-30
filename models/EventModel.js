@@ -3,16 +3,32 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const EventSchema = new Schema({
-    name: {
+    event: {
         type: String,
         required: true
     },
-    start_date: {
-        type: String,
+    startDate: {
+        type: Date,
         required: true
     },
-    end_date: {
-        type: String,
+    endDate: {
+        type: Date,
+        required: true
+    },
+    amIn: {
+        type: Date,
+        required: true
+    },
+    amOut: {
+        type: Date,
+        required: true
+    },
+    pmIn: {
+        type: Date,
+        required: true
+    },
+    pmOut: {
+        type: Date,
         required: true
     },
     image: {
