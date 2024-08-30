@@ -27,8 +27,8 @@ const getDataById = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-        const event = await Event.create({...req.body})
-        res.status(200).json(event) 
+        const data = await Event.create({...req.body})
+        res.status(200).json(data) 
     } catch (error) {
         res.status(400).json({error: error.message})
     }
@@ -68,7 +68,7 @@ const updateData = async (req, res) => {
         return res.status(404).json({error: 'No record found'})
     }
 
-    res.status(200).json({message: 'Successfully Updated'})
+    res.status(200).json(req.body)
 }
 
 module.exports = {
