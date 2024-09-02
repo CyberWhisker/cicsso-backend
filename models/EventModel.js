@@ -15,22 +15,6 @@ const EventSchema = new Schema({
         type: Date,
         required: true
     },
-    amIn: {
-        type: Date,
-        required: true
-    },
-    amOut: {
-        type: Date,
-        required: true
-    },
-    pmIn: {
-        type: Date,
-        required: true
-    },
-    pmOut: {
-        type: Date,
-        required: true
-    },
     image: {
         type: String
     }

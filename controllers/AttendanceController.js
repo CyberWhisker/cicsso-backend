@@ -1,10 +1,9 @@
-const Model = require('../models/EventModel')
+const Model = require('../models/AttendanceModel')
 const mongoose = require('mongoose')
 
 //Get Data
 const getData = async (req, res) => {
-    // const data = await Model.find({}).sort({createdAt: -1})
-    const data = await Model.find({})
+    const data = await Model.find({}).sort({createdAt: -1})
     res.status(200).json(data)
 }
 
@@ -17,6 +16,23 @@ const getDataById = async (req, res) => {
     }
 
     const data = await Model.find({_id: id})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
+//Get Data By Event ID
+const getDataBySchedId = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Model.find({scheduleId: id})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
@@ -56,7 +72,7 @@ const deleteData = async (req, res) => {
 //Update Data
 const updateData = async (req, res) => {
     const {id} = req.params
-
+    console.log(req.body)
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'Not valid ID'})
     }
@@ -77,5 +93,6 @@ module.exports = {
     getDataById,
     storeData,
     deleteData,
-    updateData
+    updateData,
+    getDataBySchedId
 }

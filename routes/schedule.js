@@ -1,5 +1,5 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData } = require('../controllers/EventController');
+const { storeData, getData, getDataById, deleteData, updateData, getDataByEventId } = require('../controllers/ScheduleController');
 
 const router = express.Router();
 
@@ -8,6 +8,9 @@ router.get('/', getData)
 
 //Get Single
 router.get('/:id', getDataById)
+
+//Get Schedule By Event Id
+router.get('/event/:id', getDataByEventId)
 
 //Post Request
 router.post('/', storeData)

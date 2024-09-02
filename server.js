@@ -3,6 +3,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const EventsRoutes = require('./routes/events')
+const ScheduleRoutes = require('./routes/schedule')
+const AttendanceRoutes = require('./routes/attendance')
 
 const port = process.env.PORT
 
@@ -22,6 +24,8 @@ app.use(express.json())
 
 // Routes
 app.use('/api/event', EventsRoutes)
+app.use('/api/schedule', ScheduleRoutes)
+app.use('/api/attendance', AttendanceRoutes)
 
 // Connect to db
 mongoose.connect(process.env.MONGO_URI)
