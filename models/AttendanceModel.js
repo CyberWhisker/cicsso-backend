@@ -11,6 +11,14 @@ const AttendanceSchema = new Schema({
         type: String,
         required: true
     },
+    name: {
+        type: String,
+        required: true
+    },
+    picture: {
+        type: String,
+        required: true
+    },
     amIn: {
         type: Date,
         required: true
