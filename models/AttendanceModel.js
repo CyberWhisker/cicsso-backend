@@ -17,23 +17,18 @@ const AttendanceSchema = new Schema({
     },
     picture: {
         type: String,
-        required: true
     },
     amIn: {
         type: Date,
-        required: true
     },
     amOut: {
         type: Date,
-        required: true
     },
     pmIn: {
         type: Date,
-        required: true
     },
     pmOut: {
         type: Date,
-        required: true
     },
 }, { timestamps: true })
 
