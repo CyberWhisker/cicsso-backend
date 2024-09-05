@@ -41,6 +41,19 @@ const getDataBySchedId = async (req, res) => {
     res.status(200).json(data)
 }
 
+//Get Data By Event ID
+const getDataByUserId = async (req, res) => {
+    const {id} = req.params
+
+    const data = await Model.find({user_id: id})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
 //Post Data
 const storeData = async (req, res) => {
     try {
@@ -93,5 +106,6 @@ module.exports = {
     storeData,
     deleteData,
     updateData,
-    getDataBySchedId
+    getDataBySchedId,
+    getDataByUserId
 }
