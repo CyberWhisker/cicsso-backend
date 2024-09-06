@@ -57,6 +57,12 @@ const getDataByUserId = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
+        const { user_id, scheduleId } = req.body;
+        const existingDocument = await Model.findOne({ user_id, scheduleId });
+
+        if (existingDocument) {
+            return res.status(400).json({ error: 'Data already exists' });
+        }
         const data = await Model.create({...req.body})
         res.status(200).json(data) 
     } catch (error) {

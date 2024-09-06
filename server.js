@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+const UserRoutes = require('./routes/user')
 const EventsRoutes = require('./routes/events')
 const ScheduleRoutes = require('./routes/schedule')
 const AttendanceRoutes = require('./routes/attendance')
@@ -23,6 +24,7 @@ app.use(cors({
 app.use(express.json())
 
 // Routes
+app.use('/api/user', UserRoutes)
 app.use('/api/event', EventsRoutes)
 app.use('/api/schedule', ScheduleRoutes)
 app.use('/api/attendance', AttendanceRoutes)
