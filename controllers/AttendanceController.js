@@ -45,7 +45,7 @@ const getDataBySchedId = async (req, res) => {
 const getDataByUserId = async (req, res) => {
     const {id} = req.params
 
-    const data = await Model.find({user_id: id})
+    const data = await Model.find({userId: id})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
@@ -57,8 +57,8 @@ const getDataByUserId = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-        const { user_id, scheduleId } = req.body;
-        const existingDocument = await Model.findOne({ user_id, scheduleId });
+        const { userId, scheduleId } = req.body;
+        const existingDocument = await Model.findOne({ userId, scheduleId });
 
         if (existingDocument) {
             return res.status(400).json({ error: 'Data already exists' });

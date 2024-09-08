@@ -72,7 +72,6 @@ const deleteData = async (req, res) => {
 //Update Data
 const updateData = async (req, res) => {
     const {id} = req.params
-    console.log(req.body)
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'Not valid ID'})
     }

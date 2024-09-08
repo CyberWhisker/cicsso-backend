@@ -9,6 +9,18 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
+    name : {
+        type: String
+    },
+    year : {
+        type: String
+    },
+    section : {
+        type: String
+    }, 
+    role : {
+        type: String
+    }, 
     password: {
         type: String,
         required: true
@@ -16,7 +28,7 @@ const UserSchema = new Schema({
 }, { timestamps: true })
 
 // Static register method
-UserSchema.statics.registerHash = async function(email,password) {
+UserSchema.statics.registerHash = async function(email, password, name, section, year) {
     const exists = await this.findOne({email})
 
     if (exists) {
@@ -28,8 +40,28 @@ UserSchema.statics.registerHash = async function(email,password) {
 
     const user = await this.create({
         email,
+        name,
+        section,
+        year,
+        role: 'user',
         password: hash
     })
+
+    return user
+}
+
+UserSchema.statics.loginHash = async function(email, password) {
+    const user = await this.findOne({email})
+
+    if(!user) {
+        throw Error('Invalid Email')
+    }
+
+    const match = await bcrypt.compare(password, user.password)
+
+    if (!match) {
+        throw Error('Incorrect password')
+    }
 
     return user
 }
