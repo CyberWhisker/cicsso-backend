@@ -6,6 +6,7 @@ const UserRoutes = require('./routes/user')
 const EventsRoutes = require('./routes/events')
 const ScheduleRoutes = require('./routes/schedule')
 const AttendanceRoutes = require('./routes/attendance')
+const ProjectRoutes = require('./routes/project')
 
 const port = process.env.PORT
 
@@ -17,7 +18,8 @@ const cors = require('cors');
 
 //Security
 app.use(cors({
-    origin: 'http://localhost:5173', // Allow only your frontend domain
+    // origin: 'http://localhost:5173',
+    origin: '*',
 }));
 
 // Middleware
@@ -28,6 +30,7 @@ app.use('/api/user', UserRoutes)
 app.use('/api/event', EventsRoutes)
 app.use('/api/schedule', ScheduleRoutes)
 app.use('/api/attendance', AttendanceRoutes)
+app.use('/api/project', ProjectRoutes)
 
 // Connect to db
 mongoose.connect(process.env.MONGO_URI)
