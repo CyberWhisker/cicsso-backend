@@ -7,6 +7,9 @@ const EventsRoutes = require('./routes/events')
 const ScheduleRoutes = require('./routes/schedule')
 const AttendanceRoutes = require('./routes/attendance')
 const ProjectRoutes = require('./routes/project')
+const ItemRoutes = require('./routes/item')
+const CollectionRoutes = require('./routes/collection')
+const TransactionRoutes = require('./routes/transaction')
 
 const port = process.env.PORT
 
@@ -31,6 +34,9 @@ app.use('/api/event', EventsRoutes)
 app.use('/api/schedule', ScheduleRoutes)
 app.use('/api/attendance', AttendanceRoutes)
 app.use('/api/project', ProjectRoutes)
+app.use('/api/item', ItemRoutes)
+app.use('/api/collection', CollectionRoutes)
+app.use('/api/transaction', TransactionRoutes)
 
 // Connect to db
 mongoose.connect(process.env.MONGO_URI)
