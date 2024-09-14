@@ -89,7 +89,8 @@ const updateData = async (req, res) => {
     }
 
     const data = await Model.findOneAndUpdate({_id: id}, {
-        ...req.body
+        ...req.body,
+        image: req.file ? req.file.filename : null
     })
 
     if (!data) {

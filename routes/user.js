@@ -1,6 +1,20 @@
 const express = require('express')
+const multer  = require('multer')
 const {login, register, verifyUser, getUsers, getUserById, deleteData, updateData} = require('../controllers/UserController')
 const router = express.Router();
+
+// Multer Setup
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, '../cicsso/public/gcashImg/')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now()
+      cb(null, uniqueSuffix + file.originalname)
+    }
+  })
+  
+const upload = multer({ storage: storage })
 
 //User Login
 router.post('/login', login)

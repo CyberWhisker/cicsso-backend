@@ -1,6 +1,7 @@
 const Model = require('../models/TransactionModel')
 const mongoose = require('mongoose')
 
+
 //Get Data
 const getData = async (req, res) => {
     // const data = await Model.find({}).sort({createdAt: -1})
@@ -45,13 +46,15 @@ const getDataByCollectionId = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-        const data = await Model.create({...req.body})
-        res.status(200).json(data) 
+      const data = await Model.create({
+        ...req.body,
+        image: req.file ? req.file.filename : null
+      });
+      res.status(200).json(data);
     } catch (error) {
-        res.status(400).json({error: error.message})
+      res.status(400).json({ error: error.message });
     }
-
-}
+};
 
 //Delete Data
 const deleteData = async (req, res) => {
@@ -79,7 +82,8 @@ const updateData = async (req, res) => {
     }
 
     const data = await Model.findOneAndUpdate({_id: id}, {
-        ...req.body
+        ...req.body,
+        image: req.file ? req.file.filename : null
     })
 
     if (!data) {
@@ -89,11 +93,29 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+//Get Transaction by User ID
+const getDataByUserId = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Model.find({userId: id})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
     updateData,
-    getDataByCollectionId
+    getDataByCollectionId,
+    getDataByUserId
 }

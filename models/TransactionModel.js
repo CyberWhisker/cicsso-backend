@@ -19,6 +19,12 @@ const TransactionSchema = new Schema({
         type: Number,
         required: true
     },
+    image: {
+        type: String,
+    },
+    status: {
+        type: String,
+    },
     date: {
         type: Date,
         required: true

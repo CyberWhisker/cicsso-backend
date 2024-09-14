@@ -12,6 +12,9 @@ const UserSchema = new Schema({
     name : {
         type: String
     },
+    image : {
+        type: String
+    },
     year : {
         type: String
     },
