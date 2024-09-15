@@ -1,5 +1,5 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, getDataBySchedId, getDataByUserId } = require('../controllers/AttendanceController');
+const { storeData, getData, getDataById, deleteData, updateData, getDataBySchedId, getDataByUserId, getDataByUserIdSchedId } = require('../controllers/AttendanceController');
 
 const router = express.Router();
 
@@ -23,5 +23,8 @@ router.delete('/:id', deleteData)
 
 //Update Request
 router.patch('/:id', updateData)
+
+//Update Request
+router.get('/user/schedule/:userId/:schedId', getDataByUserIdSchedId)
 
 module.exports = router

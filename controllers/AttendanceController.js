@@ -106,6 +106,22 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const getDataByUserIdSchedId = async (req, res) => {
+    const {userId, schedId} = req.params
+    
+    if(!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Model.findOne({userId: userId, scheduleId: schedId})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     getDataById,
@@ -113,5 +129,6 @@ module.exports = {
     deleteData,
     updateData,
     getDataBySchedId,
-    getDataByUserId
+    getDataByUserId,
+    getDataByUserIdSchedId
 }

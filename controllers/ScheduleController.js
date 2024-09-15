@@ -87,11 +87,24 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const getDataByDate = async (req, res) => {
+    const {id} = req.params
+
+    const data = await Model.findOne({date: id})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
     updateData,
-    getDataByEventId
+    getDataByEventId,
+    getDataByDate,
 }

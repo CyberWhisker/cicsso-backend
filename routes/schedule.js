@@ -1,5 +1,5 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, getDataByEventId } = require('../controllers/ScheduleController');
+const { storeData, getData, getDataById, deleteData, updateData, getDataByEventId, getDataByDate } = require('../controllers/ScheduleController');
 
 const router = express.Router();
 
@@ -20,5 +20,8 @@ router.delete('/:id', deleteData)
 
 //Update Request
 router.patch('/:id', updateData)
+
+//Date Request
+router.get('/date/:id', getDataByDate)
 
 module.exports = router
