@@ -3,20 +3,15 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const AttendanceSchema = new Schema({
-    scheduleId: {
-        type: String,
+    schedule: {
+        type: Schema.Types.ObjectId,
+        ref: 'Schedule',
         required: true
     },
-    userId: {
-        type: String,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    picture: {
-        type: String,
     },
     amIn: {
         type: Date,

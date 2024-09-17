@@ -28,7 +28,7 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true }  })
 
 // Static register method
 UserSchema.statics.registerHash = async function(email, password, name, section, year) {
@@ -68,6 +68,13 @@ UserSchema.statics.loginHash = async function(email, password) {
 
     return user
 }
+
+// Virtual field for attendances
+UserSchema.virtual('attendances', {
+    ref: 'Attendance',
+    localField: '_id',
+    foreignField: 'user', // This is the field in AttendanceSchema that references the user
+});
 
 module.exports = mongoose.model('User', UserSchema)
 

@@ -72,10 +72,29 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const fetchEventsWithAttendanceByUserId = async (req, res) => {
+    const {id} = req.params
+    try {
+        const data = await Model.find({}).populate({
+            path: 'schedules',
+            model: 'Schedule',
+            populate: {
+                path: 'attendances',
+                model: 'Attendance',
+                match: {user: id}
+            }
+        })
+        return res.status(200).json(data)
+    } catch (error) {
+        return res.status(404).json({error: error.message})
+    }
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
-    updateData
+    updateData,
+    fetchEventsWithAttendanceByUserId
 }

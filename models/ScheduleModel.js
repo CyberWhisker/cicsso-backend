@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ScheduleSchema = new Schema({
-    eventId: {
-        type: String,
+    event: {
+        type: Schema.Types.ObjectId,
+        ref: 'Event',
         required: true
     },
     date: {
@@ -27,7 +28,14 @@ const ScheduleSchema = new Schema({
         type: Date,
         required: true
     },
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
+
+// Virtual field
+ScheduleSchema.virtual('attendances', {
+    ref: 'Attendance',
+    localField: '_id',
+    foreignField: 'schedule',
+});
 
 module.exports = mongoose.model('Schedule', ScheduleSchema)
 

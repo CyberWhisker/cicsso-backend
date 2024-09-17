@@ -32,7 +32,7 @@ const getDataByEventId = async (req, res) => {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
-    const data = await Model.find({eventId: id})
+    const data = await Model.find({event: id})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})

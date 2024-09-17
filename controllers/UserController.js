@@ -100,6 +100,40 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const getUsersWithAttendanceBySchedId = async (req, res) => {
+    const {id} = req.params
+    try {
+        const data = await Model.find({}).populate({
+            path: 'attendances',
+            model: 'Attendance',
+            match: {schedule: id}
+        })
+    
+        if (!data) {
+            return res.status(404).json({error: 'No record found'})
+        }
+        return res.status(200).json(data)
+    } catch (error) {
+        return res.status(404).json({error: error.message})
+    }
+}
+
+const getUsersWithAttendance = async (req, res) => {
+    try {
+        const data = await Model.find({}).populate({
+            path: 'attendances',
+            model: 'Attendance',
+        })
+    
+        if (!data) {
+            return res.status(404).json({error: 'No record found'})
+        }
+        return res.status(200).json(data)
+    } catch (error) {
+        return res.status(404).json({error: error.message})
+    }
+}
+
 module.exports = {
     login,
     register,
@@ -107,5 +141,7 @@ module.exports = {
     getUsers,
     getUserById,
     updateData,
-    deleteData
+    deleteData,
+    getUsersWithAttendanceBySchedId,
+    getUsersWithAttendance
 }

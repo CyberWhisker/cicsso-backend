@@ -45,7 +45,7 @@ const getDataBySchedId = async (req, res) => {
 const getDataByUserId = async (req, res) => {
     const {id} = req.params
 
-    const data = await Model.find({userId: id})
+    const data = await Model.find({user: id})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
@@ -57,8 +57,8 @@ const getDataByUserId = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-        const { userId, scheduleId } = req.body;
-        const existingDocument = await Model.findOne({ userId, scheduleId });
+        const { user, schedule } = req.body;
+        const existingDocument = await Model.findOne({ user, schedule });
 
         if (existingDocument) {
             return res.status(400).json({ error: 'Data already exists' });
@@ -107,13 +107,13 @@ const updateData = async (req, res) => {
 }
 
 const getDataByUserIdSchedId = async (req, res) => {
-    const {userId, schedId} = req.params
+    const {user, schedule} = req.params
     
-    if(!mongoose.Types.ObjectId.isValid(userId)) {
+    if(!mongoose.Types.ObjectId.isValid(user)) {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
-    const data = await Model.findOne({userId: userId, scheduleId: schedId})
+    const data = await Model.findOne({user: user, schedule: schedule})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
