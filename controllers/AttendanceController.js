@@ -107,13 +107,12 @@ const updateData = async (req, res) => {
 }
 
 const getDataByUserIdSchedId = async (req, res) => {
-    const {user, schedule} = req.params
-    
-    if(!mongoose.Types.ObjectId.isValid(user)) {
+    const {userId, schedId} = req.params
+    if(!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
-    const data = await Model.findOne({user: user, schedule: schedule})
+    const data = await Model.findOne({user: userId, schedule: schedId})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})

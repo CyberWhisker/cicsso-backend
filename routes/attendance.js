@@ -25,6 +25,6 @@ router.delete('/:id', deleteData)
 router.patch('/:id', updateData)
 
 //Update Request
-router.get('/user/schedule/:userId/:schedId', getDataByUserIdSchedId)
+router.get('/getDataByUserIdSchedId/:userId/:schedId', getDataByUserIdSchedId)
 
 module.exports = router

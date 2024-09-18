@@ -90,7 +90,7 @@ const updateData = async (req, res) => {
 const getDataByDate = async (req, res) => {
     const {id} = req.params
 
-    const data = await Model.findOne({date: id})
+    const data = await Model.findOne({date: id}).populate('event')
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
