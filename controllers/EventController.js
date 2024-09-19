@@ -1,4 +1,5 @@
 const Model = require('../models/EventModel')
+const Schedule = require('../models/ScheduleModel')
 const mongoose = require('mongoose')
 
 //Get Data
@@ -45,6 +46,7 @@ const deleteData = async (req, res) => {
     }
 
     const data = await Model.findOneAndDelete({_id: id})
+    await Schedule.deleteMany({event: id})
 
     if (!data) {
         return res.status(404).json({error: 'No record found'})
