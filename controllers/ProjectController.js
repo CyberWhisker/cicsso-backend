@@ -4,7 +4,11 @@ const mongoose = require('mongoose')
 //Get Data
 const getData = async (req, res) => {
     // const data = await Model.find({}).sort({createdAt: -1})
-    const data = await Model.find({})
+    const data = await Model.find({}).populate({
+        path: 'items',
+        model: 'Item'
+
+    })
     res.status(200).json(data)
 }
 

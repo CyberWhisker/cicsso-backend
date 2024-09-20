@@ -33,7 +33,7 @@ const getDataByProjectId = async (req, res) => {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
-    const data = await Model.find({projectId: id})
+    const data = await Model.find({project: id})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})

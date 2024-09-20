@@ -10,7 +10,14 @@ const ProjectSchema = new Schema({
     description: {
         type: String,
     },
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
+
+// Virtual field
+ProjectSchema.virtual('items', {
+    ref: 'Item',
+    localField: '_id',
+    foreignField: 'project', // This is the field in AttendanceSchema that references the user
+});
 
 module.exports = mongoose.model('Project', ProjectSchema)
 
