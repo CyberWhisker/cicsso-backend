@@ -4,11 +4,13 @@ const Schema = mongoose.Schema
 
 const TransactionSchema = new Schema({
     userId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     collectionId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Collection',
         required: true
     },
     payment: {
@@ -28,8 +30,12 @@ const TransactionSchema = new Schema({
     date: {
         type: Date,
         required: true
-    }
-}, { timestamps: true })
+    },
+    notification: {
+        type: Number,
+        required: true
+    },
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true }   })
 
 module.exports = mongoose.model('Transaction', TransactionSchema)
 

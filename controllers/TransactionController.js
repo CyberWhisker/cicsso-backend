@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 //Get Data
 const getData = async (req, res) => {
     // const data = await Model.find({}).sort({createdAt: -1})
-    const data = await Model.find({})
+    const data = await Model.find({}).populate('collectionId').populate('userId')
     res.status(200).json(data)
 }
 
@@ -76,14 +76,14 @@ const deleteData = async (req, res) => {
 //Update Data
 const updateData = async (req, res) => {
     const {id} = req.params
-
+    const {image} = req.body;
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
     const data = await Model.findOneAndUpdate({_id: id}, {
         ...req.body,
-        image: req.file ? req.file.filename : null
+        image: req.file ? req.file.filename : image
     })
 
     if (!data) {
@@ -101,7 +101,7 @@ const getDataByUserId = async (req, res) => {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
-    const data = await Model.find({userId: id})
+    const data = await Model.find({userId: id}).populate('userId').populate('collectionId')
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
