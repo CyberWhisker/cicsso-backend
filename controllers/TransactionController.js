@@ -1,5 +1,6 @@
 const Model = require('../models/TransactionModel')
 const mongoose = require('mongoose')
+const { storeNotification } = require('./NotificationController')
 
 
 //Get Data
@@ -50,6 +51,14 @@ const storeData = async (req, res) => {
         ...req.body,
         image: req.file ? req.file.filename : null
       });
+
+      const dataForm = {
+        userId: data.userId,
+        transactionId: data._id,
+        message: "Transaction has been Submitted"
+      }
+      await storeNotification(dataForm)
+
       res.status(200).json(data);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -70,6 +79,13 @@ const deleteData = async (req, res) => {
         return res.status(404).json({error: 'No record found'})
     }
 
+    const dataForm = {
+        userId: data.userId,
+        message: "Transaction has been Removed"
+    }
+
+    await storeNotification(dataForm)
+
     res.status(200).json({message: 'Successfully Deleted'})
 }
 
@@ -89,6 +105,13 @@ const updateData = async (req, res) => {
     if (!data) {
         return res.status(404).json({error: 'No record found'})
     }
+
+    const dataForm = {
+        userId: data.userId,
+        transactionId: data._id,
+        message: "Transaction has been Updated"
+    }
+    await storeNotification(dataForm)
 
     res.status(200).json(req.body)
 }

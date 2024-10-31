@@ -10,6 +10,7 @@ const ProjectRoutes = require('./routes/project')
 const ItemRoutes = require('./routes/item')
 const CollectionRoutes = require('./routes/collection')
 const TransactionRoutes = require('./routes/transaction')
+const NotificationRoutes = require('./routes/notification')
 
 const port = process.env.PORT
 
@@ -37,6 +38,7 @@ app.use('/api/project', ProjectRoutes)
 app.use('/api/item', ItemRoutes)
 app.use('/api/collection', CollectionRoutes)
 app.use('/api/transaction', TransactionRoutes)
+app.use('/api/notification', NotificationRoutes)
 
 // Connect to db
 mongoose.connect(process.env.MONGO_URI)
