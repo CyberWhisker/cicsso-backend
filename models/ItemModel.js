@@ -15,7 +15,7 @@ const ItemSchema = new Schema({
         type: Number,
         required: true
     },
-    price: {
+    amount: {
         type: Number,
         required: true
     },

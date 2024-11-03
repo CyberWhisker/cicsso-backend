@@ -1,4 +1,5 @@
 const Model = require('../models/CollectionModel')
+const Transaction = require('../models/TransactionModel')
 const mongoose = require('mongoose')
 
 //Get Data
@@ -45,7 +46,7 @@ const deleteData = async (req, res) => {
     }
 
     const data = await Model.findOneAndDelete({_id: id})
-
+    await Transaction.deleteMany({collectionId: id})
     if (!data) {
         return res.status(404).json({error: 'No record found'})
     }
@@ -72,10 +73,35 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const getCollectionWithTransactionByUserId = async (req, res) => {
+    // const data = await Model.find({}).sort({createdAt: -1})
+    const {id} = req.params
+    const data = await Model.find({}).populate({
+        path: 'transaction',
+        model: 'Transaction',
+        match: {userId: id},
+        options: {limit: 1}
+    }).populate({
+        path: 'eventId',
+        model: 'Event',
+        populate: {
+            path: 'schedules',
+            model: 'Schedule',
+            populate: {
+                path: 'attendances',
+                model: 'Attendance',
+                match: {user: id}
+            }
+        }
+    })
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
     updateData,
+    getCollectionWithTransactionByUserId
 }

@@ -1,5 +1,8 @@
 const Model = require('../models/EventModel')
 const Schedule = require('../models/ScheduleModel')
+const Collection = require('../models/CollectionModel')
+const Transaction = require('../models/TransactionModel')
+const Attendance = require('../models/AttendanceModel')
 const mongoose = require('mongoose')
 
 //Get Data
@@ -30,6 +33,11 @@ const getDataById = async (req, res) => {
 const storeData = async (req, res) => {
     try {
         const data = await Model.create({...req.body})
+        await Collection.create({
+            collectionName: data.event,
+            eventId: data._id,
+            fine: 20,
+        })
         res.status(200).json(data) 
     } catch (error) {
         res.status(400).json({error: error.message})
@@ -47,6 +55,10 @@ const deleteData = async (req, res) => {
 
     const data = await Model.findOneAndDelete({_id: id})
     await Schedule.deleteMany({event: id})
+    const collection = await Collection.findOneAndDelete({eventId: id})
+    if (collection) {
+        await Transaction.findOneAndDelete({collectionId: collection._id})
+    }
 
     if (!data) {
         return res.status(404).json({error: 'No record found'})

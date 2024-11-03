@@ -5,14 +5,14 @@ const router = express.Router();
 
 // Multer Setup
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, '../cicsso/public/gcashImg/')
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now()
-      cb(null, uniqueSuffix + file.originalname)
-    }
-  })
+  destination: function (req, file, cb) {
+    cb(null, '../cicsso/public/gcashImg/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now()
+    cb(null, uniqueSuffix + file.originalname)
+  }
+})
   
 const upload = multer({ storage: storage })
 
@@ -34,7 +34,6 @@ router.get('/getUsersWithAttendanceBySchedId/:id', getUsersWithAttendanceBySched
 
 //Get User
 router.get('/:id', getUserById)
-
 
 //Delete User
 router.delete('/:id', deleteData)

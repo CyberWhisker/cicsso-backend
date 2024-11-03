@@ -10,6 +10,13 @@ const getData = async (req, res) => {
     res.status(200).json(data)
 }
 
+//Get Data by status
+const getDataByStatus = async (req, res) => {
+    const {status} = req.params
+    const data = await Model.find({status: status})
+    res.status(200).json(data)
+}
+
 //Get Single Data
 const getDataById = async (req, res) => {
     const {id} = req.params
@@ -140,5 +147,6 @@ module.exports = {
     deleteData,
     updateData,
     getDataByCollectionId,
-    getDataByUserId
+    getDataByUserId,
+    getDataByStatus
 }

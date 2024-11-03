@@ -1,6 +1,6 @@
 const express = require('express')
 const multer  = require('multer')
-const { storeData, getData, getDataById, deleteData, updateData, getDataByCollectionId, getDataByUserId } = require('../controllers/TransactionController');
+const { storeData, getData, getDataById, deleteData, updateData, getDataByCollectionId, getDataByUserId, getDataByStatus } = require('../controllers/TransactionController');
 const router = express.Router();
 
 // Multer Setup
@@ -19,8 +19,12 @@ const upload = multer({ storage: storage })
 //Get all
 router.get('/', getData)
 
+
 //Get Single
 router.get('/:id', getDataById)
+
+//Get all By Status
+router.get('/getDataByStatus/:status', getDataByStatus)
 
 //Get Schedule By Event Id
 router.get('/collection/:id', getDataByCollectionId)

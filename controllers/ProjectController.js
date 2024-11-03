@@ -1,4 +1,5 @@
 const Model = require('../models/ProjectModel')
+const Item = require('../models/ItemModel')
 const mongoose = require('mongoose')
 
 //Get Data
@@ -49,6 +50,7 @@ const deleteData = async (req, res) => {
     }
 
     const data = await Model.findOneAndDelete({_id: id})
+    await Item.deleteMany({project: id})
 
     if (!data) {
         return res.status(404).json({error: 'No record found'})

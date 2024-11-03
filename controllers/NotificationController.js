@@ -19,7 +19,12 @@ const getDataByUserId = async (req, res) => {
         return res.status(404).json({error: 'Not valid ID'})
     }
 
-    const data = await Model.find({userId: id}).sort({createdAt: -1})
+    const data = await Model.find({userId: id}).populate({
+        path: 'transactionId',
+        populate: {
+            path: 'collectionId' // Populate collectionId within transactionId
+        }
+    }).sort({createdAt: -1})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
