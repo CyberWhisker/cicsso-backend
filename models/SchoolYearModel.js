@@ -17,7 +17,7 @@ const SchoolYearSchema = new Schema({
     },
     status: {
         type: Boolean,
-        required: true
+        default: true
     },
 }, { timestamps: true })
 
