@@ -11,6 +11,10 @@ const CollectionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Event',
     },
+    schoolYearId: {
+        type: Schema.Types.ObjectId,
+        ref: 'SchoolYear',
+    },
     fine: {
         type: Number,
         required: true

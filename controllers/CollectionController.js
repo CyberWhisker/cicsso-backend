@@ -1,5 +1,6 @@
 const Model = require('../models/CollectionModel')
 const Transaction = require('../models/TransactionModel')
+const SchoolYear = require('../models/SchoolYearModel')
 const mongoose = require('mongoose')
 
 //Get Data
@@ -29,7 +30,11 @@ const getDataById = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-        const data = await Model.create({...req.body})
+        const schoolYearData = await SchoolYear.findOne({status: true})
+        const data = await Model.create({
+            ...req.body,
+            schoolYearId: schoolYearData._id
+        })
         res.status(200).json(data) 
     } catch (error) {
         res.status(400).json({error: error.message})

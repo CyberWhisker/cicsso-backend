@@ -47,9 +47,22 @@ const deleteData = async (req, res) => {
     }
 }
 
+//Get Single Data
+const getActiveSchoolYear = async (req, res) => {
+
+    const data = await Model.findOne({status: true})
+
+    if(!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     storeData,
     updateData,
-    deleteData
+    deleteData,
+    getActiveSchoolYear
 }

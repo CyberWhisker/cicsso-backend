@@ -2,7 +2,7 @@ const Model = require('../models/EventModel')
 const Schedule = require('../models/ScheduleModel')
 const Collection = require('../models/CollectionModel')
 const Transaction = require('../models/TransactionModel')
-const Attendance = require('../models/AttendanceModel')
+const SchoolYear = require('../models/SchoolYearModel')
 const mongoose = require('mongoose')
 
 //Get Data
@@ -33,8 +33,10 @@ const getDataById = async (req, res) => {
 const storeData = async (req, res) => {
     try {
         const data = await Model.create({...req.body})
+        const schoolYearData = await SchoolYear.findOne({status: true})
         await Collection.create({
             collectionName: data.event,
+            schoolYearId: schoolYearData._id,
             eventId: data._id,
             fine: 20,
         })

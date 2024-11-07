@@ -4,34 +4,53 @@ const bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
+    firstName : {
+        type: String,
+        required: true
+    },
+    middleName : {
+        type: String,
+        required: true
+    },
+    lastName : {
+        type: String,
+        required: true
+    },
+    extensionName : {
+        type: String
+    },
+    program : {
+        type: String,
+        required: true
+    },
+    year : {
+        type: String,
+        required: true
+    },
+    section : {
+        type: String,
+        required: true
+    }, 
+    role : {
+        type: String
+    }, 
     email: {
         type: String,
         required: true,
         unique: true
     },
-    name : {
-        type: String
-    },
-    image : {
-        type: String
-    },
-    year : {
-        type: String
-    },
-    section : {
-        type: String
-    }, 
-    role : {
-        type: String
-    }, 
     password: {
         type: String,
         required: true
     },
+    image : {
+        type: String
+    },
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true }  })
 
 // Static register method
-UserSchema.statics.registerHash = async function(email, password, name, section, year) {
+UserSchema.statics.registerHash = async function(formData) {
+    const {email, password} = formData
     const exists = await this.findOne({email})
 
     if (exists) {
@@ -42,10 +61,7 @@ UserSchema.statics.registerHash = async function(email, password, name, section,
     const hash = await bcrypt.hash(password, salt)
 
     const user = await this.create({
-        email,
-        name,
-        section,
-        year,
+        ...formData,
         role: 'user',
         password: hash
     })
