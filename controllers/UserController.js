@@ -133,6 +133,7 @@ const getUsersWithAttendance = async (req, res) => {
     }
 }
 
+
 module.exports = {
     login,
     register,
@@ -142,5 +143,5 @@ module.exports = {
     updateData,
     deleteData,
     getUsersWithAttendanceBySchedId,
-    getUsersWithAttendance
+    getUsersWithAttendance,
 }

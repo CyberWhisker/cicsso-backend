@@ -1,6 +1,6 @@
 const express = require('express')
 const multer  = require('multer')
-const {login, register, verifyUser, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance} = require('../controllers/UserController')
+const {login, register, verifyUser, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction} = require('../controllers/UserController')
 const router = express.Router();
 
 // Multer Setup

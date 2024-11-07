@@ -92,5 +92,11 @@ UserSchema.virtual('attendances', {
     foreignField: 'user', // This is the field in AttendanceSchema that references the user
 });
 
+UserSchema.virtual('transaction', {
+    ref: 'Transaction',
+    localField: '_id',
+    foreignField: 'userId', // This is the field in AttendanceSchema that references the user
+});
+
 module.exports = mongoose.model('User', UserSchema)
 
