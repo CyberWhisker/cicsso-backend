@@ -15,6 +15,14 @@ const CollectionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'SchoolYear',
     },
+    indicator1: {
+        type: Schema.Types.ObjectId,
+        ref: 'SchoolYear',
+    },
+    indicator2: {
+        type: Schema.Types.ObjectId,
+        ref: 'SchoolYear',
+    },
     fine: {
         type: Number,
         required: true

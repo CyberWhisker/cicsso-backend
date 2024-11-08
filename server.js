@@ -13,6 +13,7 @@ const TransactionRoutes = require('./routes/transaction')
 const NotificationRoutes = require('./routes/notification')
 const SchoolYearRoutes = require('./routes/schoolYear')
 const SignatoriesRoutes = require('./routes/signatories')
+const ClearanceRoutes = require('./routes/clearance')
 
 const port = process.env.PORT
 
@@ -43,6 +44,7 @@ app.use('/api/transaction', TransactionRoutes)
 app.use('/api/notification', NotificationRoutes)
 app.use('/api/schoolYear', SchoolYearRoutes)
 app.use('/api/signatories', SignatoriesRoutes)
+app.use('/api/clearance', ClearanceRoutes)
 
 // Connect to db
 mongoose.connect(process.env.MONGO_URI)
