@@ -3,7 +3,34 @@ const mongoose = require('mongoose')
 
 //Get Data
 const getData = async (req, res) => {
-    const data = await Model.find({}).populate('user').populate('schoolYear').sort({ createdAt: -1 })
+    const data = await Model.find({}).populate('user').populate({
+        path: 'schoolYear',
+        model: 'SchoolYear',
+        populate: [
+            { path: 'collection', model: 'Collection' },
+            { path: 'signatories', model: 'Signatories' }
+        ]
+
+    }).sort({ createdAt: -1 })
+    res.status(200).json(data)
+}
+
+const getClearanceByUserId = async (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+
+    const data = await Model.find({ user: id }).populate('user').populate({
+        path: 'schoolYear',
+        model: 'SchoolYear',
+        populate: [
+            { path: 'collection', model: 'Collection' },
+            { path: 'signatories', model: 'Signatories' }
+        ]
+
+    }).sort({ createdAt: -1 })
     res.status(200).json(data)
 }
 
@@ -77,10 +104,31 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const fetchClearanceByUserandSchoolYear = async (req, res) => {
+    const { user, schoolYear } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(user)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+    if (!mongoose.Types.ObjectId.isValid(schoolYear)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+
+    const data = await Model.findOne({ schoolYear: schoolYear, user: user }).populate('schoolYear')
+
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
+    }
+
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
     updateData,
+    fetchClearanceByUserandSchoolYear,
+    getClearanceByUserId
 }

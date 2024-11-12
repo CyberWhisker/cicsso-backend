@@ -1,6 +1,6 @@
 const express = require('express')
 const multer  = require('multer')
-const { storeData, getData, deleteData, updateData } = require('../controllers/SignatoriesController');
+const { storeData, getData, deleteData, updateData, getSignatoriesBySchoolYear } = require('../controllers/SignatoriesController');
 
 const router = express.Router();
 
@@ -19,6 +19,9 @@ const upload = multer({ storage: storage })
 
 //Get all
 router.get('/', getData)
+
+//Get all
+router.get('/getSignatoriesBySchoolYear/:id', getSignatoriesBySchoolYear)
 
 //Post Request
 router.post('/', upload.single('file'), storeData)

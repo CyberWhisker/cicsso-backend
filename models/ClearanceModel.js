@@ -17,7 +17,8 @@ const ClearanceSchema = new Schema({
         type: String,
         default: 'Pending'
     },
-}, { timestamps: true })
+}, { timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true} })
 
 module.exports = mongoose.model('Clearance', ClearanceSchema)
+
 

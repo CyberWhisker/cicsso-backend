@@ -19,7 +19,15 @@ const UserSchema = new Schema({
     extensionName : {
         type: String
     },
+    studentId : {
+        type: String,
+        required: true
+    },
     program : {
+        type: String,
+        required: true
+    },
+    type : {
         type: String,
         required: true
     },

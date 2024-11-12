@@ -19,7 +19,19 @@ const SchoolYearSchema = new Schema({
         type: Boolean,
         default: true
     },
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
+
+SchoolYearSchema.virtual('collection', {
+    ref: 'Collection',
+    localField: '_id',
+    foreignField: 'schoolYearId',
+});
+
+SchoolYearSchema.virtual('signatories', {
+    ref: 'Signatories',
+    localField: '_id',
+    foreignField: 'schoolYear',
+});
 
 module.exports = mongoose.model('SchoolYear', SchoolYearSchema)
 

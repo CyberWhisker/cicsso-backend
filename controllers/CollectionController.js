@@ -102,11 +102,30 @@ const getCollectionWithTransactionByUserId = async (req, res) => {
     res.status(200).json(data)
 }
 
+const getCollectionBySchoolYear = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+
+    const data = await Model.findOne({schoolYearId: id}, {
+        ...req.body
+    })
+
+    if (!data) {
+        return res.status(404).json({error: 'No record found'})
+    }
+
+    res.status(200).json(req.body)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
     updateData,
-    getCollectionWithTransactionByUserId
+    getCollectionWithTransactionByUserId,
+    getCollectionBySchoolYear
 }
