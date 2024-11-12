@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 const ItemSchema = new Schema({
     project: {
         type: Schema.Types.ObjectId,
+        ref: 'Project',
         required: true
     },
     item: {
@@ -23,7 +24,7 @@ const ItemSchema = new Schema({
         type: Date,
         required: true
     },
-}, { timestamps: true })
+}, { timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true} })
 
 module.exports = mongoose.model('Item', ItemSchema)
 

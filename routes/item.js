@@ -1,10 +1,12 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, getDataByProjectId } = require('../controllers/ItemController');
+const { storeData, getData, getDataById, deleteData, updateData, getDataByProjectId, getItemsWithProjects } = require('../controllers/ItemController');
 
 const router = express.Router();
 
 //Get all
 router.get('/', getData)
+
+router.get('/getItemsWithProjects', getItemsWithProjects)
 
 //Get Single
 router.get('/:id', getDataById)
@@ -20,5 +22,6 @@ router.patch('/:id', updateData)
 
 //Get By Project ID
 router.get('/project/:id', getDataByProjectId)
+
 
 module.exports = router

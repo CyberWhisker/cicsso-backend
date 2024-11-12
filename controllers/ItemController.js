@@ -8,6 +8,13 @@ const getData = async (req, res) => {
     res.status(200).json(data)
 }
 
+//Get Data
+const getItemsWithProjects = async (req, res) => {
+    // const data = await Model.find({}).sort({createdAt: -1})
+    const data = await Model.find({}).populate('project')
+    res.status(200).json(data)
+}
+
 //Get Single Data
 const getDataById = async (req, res) => {
     const {id} = req.params
@@ -95,5 +102,6 @@ module.exports = {
     storeData,
     deleteData,
     updateData,
-    getDataByProjectId
+    getDataByProjectId,
+    getItemsWithProjects
 }
