@@ -7,9 +7,9 @@ const getData = async (req, res) => {
     const data = await Model.find({}).populate({
         path: 'transactionId',
         populate: {
-            path: 'collectionId' // Populate collectionId within transactionId
+            path: 'collectionId'
         }
-    }).sort({createdAt: -1})
+    }).populate('userId').sort({createdAt: -1})
     res.status(200).json(data)
 }
 
@@ -24,7 +24,7 @@ const getDataByUserId = async (req, res) => {
         populate: {
             path: 'collectionId' // Populate collectionId within transactionId
         }
-    }).sort({createdAt: -1})
+    }).populate('userId').sort({createdAt: -1})
 
     if(!data) {
         return res.status(404).json({error: 'No record found'})
@@ -60,9 +60,27 @@ const updateData = async (req, res) => {
     }
 }
 
+const deleteData = async (req, res) => {
+    const {id} = req.params
+
+    if(!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'Not valid ID'})
+    }
+    
+    try {
+        const data = await Model.findOneAndDelete({_id: id} , {
+            ...req.body
+        })
+        res.status(200).json(data)
+    } catch (error) {
+        res.status(400).json({error: error})
+    }
+}
+
 module.exports = {
     getData,
     getDataByUserId,
     storeNotification,
-    updateData
+    updateData,
+    deleteData
 }

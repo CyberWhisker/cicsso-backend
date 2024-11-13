@@ -75,6 +75,7 @@ const storeData = async (req, res) => {
 //Delete Data
 const deleteData = async (req, res) => {
     const {id} = req.params
+    const {message} = req.body
 
     if(!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'Not valid ID'})
@@ -88,7 +89,7 @@ const deleteData = async (req, res) => {
 
     const dataForm = {
         userId: data.userId,
-        message: "Transaction has been Removed"
+        message: message || "Transaction has been Removed"
     }
 
     await storeNotification(dataForm)
