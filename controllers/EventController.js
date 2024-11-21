@@ -37,6 +37,8 @@ const storeData = async (req, res) => {
         await Collection.create({
             collectionName: data.event,
             schoolYearId: schoolYearData._id,
+            startDate: data.startDate,
+            endDate: data.endDate,
             eventId: data._id,
             fine: 20,
         })

@@ -1,14 +1,17 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, getCollectionWithTransactionByUserId, getCollectionBySchoolYear } = require('../controllers/CollectionController');
+const { storeData, getData, getDataById, deleteData, updateData, getCollectionWithTransactionByUserId, getCollectionBySchoolYear, getCollectionWithEventsAndAttendance } = require('../controllers/CollectionController');
 
 const router = express.Router();
 
 //Get all
 router.get('/', getData)
 
+router.get('/getCollectionWithEventsAndAttendance', getCollectionWithEventsAndAttendance)
+
 router.get('/getCollectionWithTransactionByUserId/:id', getCollectionWithTransactionByUserId)
 
 router.get('/getCollectionBySchoolYear/:id', getCollectionBySchoolYear)
+
 
 //Get Single
 router.get('/:id', getDataById)
