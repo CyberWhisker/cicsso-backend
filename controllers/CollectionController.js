@@ -12,16 +12,16 @@ const getData = async (req, res) => {
 
 //Get Single Data
 const getDataById = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.find({_id: id})
+    const data = await Model.find({ _id: id })
 
-    if(!data) {
-        return res.status(404).json({error: 'No record found'})
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
     }
 
     res.status(200).json(data)
@@ -30,62 +30,79 @@ const getDataById = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-        const schoolYearData = await SchoolYear.findOne({status: true})
+        const schoolYearData = await SchoolYear.findOne({ status: true })
         const data = await Model.create({
             ...req.body,
             schoolYearId: schoolYearData._id
         })
-        res.status(200).json(data) 
+        res.status(200).json(data)
     } catch (error) {
-        res.status(400).json({error: error.message})
+        res.status(400).json({ error: error.message })
     }
 
 }
 
 //Delete Data
 const deleteData = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.findOneAndDelete({_id: id})
-    await Transaction.deleteMany({collectionId: id})
+    const data = await Model.findOneAndDelete({ _id: id })
+    await Transaction.deleteMany({ collectionId: id })
     if (!data) {
-        return res.status(404).json({error: 'No record found'})
+        return res.status(404).json({ error: 'No record found' })
     }
 
-    res.status(200).json({message: 'Successfully Deleted'})
+    res.status(200).json({ message: 'Successfully Deleted' })
 }
 
 //Update Data
 const updateData = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.findOneAndUpdate({_id: id}, {
+    const data = await Model.findOneAndUpdate({ _id: id }, {
         ...req.body
     })
 
     if (!data) {
-        return res.status(404).json({error: 'No record found'})
+        return res.status(404).json({ error: 'No record found' })
     }
 
     res.status(200).json(req.body)
 }
 
+const getCollectionWithTransaction = async (req, res) => {
+    const data = await Model.find({})
+        .populate({
+            path: 'transaction',
+            model: 'Transaction'
+        })
+        .populate({
+            path: 'project',
+            model: 'Project',
+            populate: {
+                path: 'items',
+                model: 'Item'
+            }
+        })
+    res.status(200).json(data)
+}
+
 const getCollectionWithTransactionByUserId = async (req, res) => {
     // const data = await Model.find({}).sort({createdAt: -1})
-    const {id} = req.params
+    const { id } = req.params
     const data = await Model.find({}).populate({
         path: 'transaction',
         model: 'Transaction',
-        match: {userId: id},
-        options: {limit: 1}
+        match: { userId: id },
+        options: { limit: 1 }
     }).populate({
         path: 'eventId',
         model: 'Event',
@@ -95,7 +112,7 @@ const getCollectionWithTransactionByUserId = async (req, res) => {
             populate: {
                 path: 'attendances',
                 model: 'Attendance',
-                match: {user: id}
+                match: { user: id }
             }
         }
     })
@@ -103,18 +120,18 @@ const getCollectionWithTransactionByUserId = async (req, res) => {
 }
 
 const getCollectionBySchoolYear = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.findOne({schoolYearId: id}, {
+    const data = await Model.findOne({ schoolYearId: id }, {
         ...req.body
     })
 
     if (!data) {
-        return res.status(404).json({error: 'No record found'})
+        return res.status(404).json({ error: 'No record found' })
     }
 
     res.status(200).json(req.body)
@@ -122,12 +139,12 @@ const getCollectionBySchoolYear = async (req, res) => {
 
 const getCollectionWithEventsAndAttendance = async (req, res) => {
     // const data = await Model.find({}).sort({createdAt: -1})
-    const {id} = req.params
+    const { id } = req.params
     const data = await Model.find({}).populate({
         path: 'transaction',
         model: 'Transaction',
-        match: {userId: id},
-        options: {limit: 1}
+        match: { userId: id },
+        options: { limit: 1 }
     }).populate({
         path: 'eventId',
         model: 'Event',
@@ -137,7 +154,7 @@ const getCollectionWithEventsAndAttendance = async (req, res) => {
             populate: {
                 path: 'attendances',
                 model: 'Attendance',
-                match: {user: id}
+                match: { user: id }
             }
         }
     })
@@ -152,5 +169,6 @@ module.exports = {
     updateData,
     getCollectionWithTransactionByUserId,
     getCollectionBySchoolYear,
-    getCollectionWithEventsAndAttendance
+    getCollectionWithEventsAndAttendance,
+    getCollectionWithTransaction
 }

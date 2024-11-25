@@ -27,6 +27,10 @@ const CollectionSchema = new Schema({
         type: Number,
         required: true
     },
+    label: {
+        type: String,
+        default: 'Mandatory'
+    },
     startDate: {
         type: Date,
         // required: true
@@ -40,6 +44,12 @@ const CollectionSchema = new Schema({
 // Virtual field for transactions
 CollectionSchema.virtual('transaction', {
     ref: 'Transaction', // Ensure 'Transaction' is the exact name of the model
+    localField: '_id',
+    foreignField: 'collectionId', // This should match the field in Transaction
+});
+
+CollectionSchema.virtual('project', {
+    ref: 'Project', // Ensure 'Transaction' is the exact name of the model
     localField: '_id',
     foreignField: 'collectionId', // This should match the field in Transaction
 });

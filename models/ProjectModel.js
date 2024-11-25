@@ -7,6 +7,15 @@ const ProjectSchema = new Schema({
         type: String,
         required: true
     },
+    collectionId: {
+        type: Schema.Types.ObjectId,
+        ref: "Collection",
+        required: true
+    },
+    status: {
+        type: String,
+        default: 'Ongoing'
+    },
     description: {
         type: String,
     },
