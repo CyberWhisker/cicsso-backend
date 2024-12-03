@@ -54,6 +54,10 @@ const UserSchema = new Schema({
     image : {
         type: String
     },
+    verified: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true }  })
 
 // Static register method

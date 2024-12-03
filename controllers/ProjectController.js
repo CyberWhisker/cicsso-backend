@@ -29,7 +29,19 @@ const getDataById = async (req, res) => {
         return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.find({ _id: id })
+    const data = await Model.findOne({ _id: id })
+        .populate({
+            path: 'collectionId',
+            model: 'Collection',
+            populate: {
+                path: 'transaction',
+                model: 'Transaction',
+            }
+        })
+        .populate({
+            path: 'items',
+            model: 'Item'
+        })
 
     if (!data) {
         return res.status(404).json({ error: 'No record found' })
@@ -86,10 +98,39 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+const getDataBySchoolYearId = async (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+
+    const data = await Model.find({ schoolYearId: id })
+        .populate({
+            path: 'collectionId',
+            model: 'Collection',
+            populate: {
+                path: 'transaction',
+                model: 'Transaction',
+            }
+        })
+        .populate({
+            path: 'items',
+            model: 'Item'
+        })
+
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
+    }
+
+    res.status(200).json(data)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
-    updateData
+    updateData,
+    getDataBySchoolYearId
 }

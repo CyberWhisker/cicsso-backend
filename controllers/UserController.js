@@ -2,6 +2,7 @@ const Model = require('../models/UserModel')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const sendVerificationEmail = require('../utils/sendVerificationEmail')
 
 const createToken = (_id) => {
     return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '3d' })
@@ -41,10 +42,16 @@ const login = async (req, res) => {
 }
 
 const register = async (req, res) => {
+    const {email} = req.body
     try {
         const user = await Model.registerHash(req.body)
         const token = createToken(user._id)
-        res.status(200).json({ token, user: { _id: user._id, email: user.email, role: user.role } })
+
+        // Generate a verification token
+        const verificationToken = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1d' });
+        await sendVerificationEmail(email, user._id, verificationToken);
+
+        res.status(200).json({ token, message: 'User registered successfully. Please check your email to verify your account.', user: { _id: user._id, email: user.email, role: user.role } })
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -147,6 +154,34 @@ const getUsersWithAttendance = async (req, res) => {
     }
 }
 
+const verifyEmail = async (req, res) => {
+    const { token, userId } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID.' });
+    }
+
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.SECRET);
+
+        if (decoded.userId !== userId) {
+            throw new Error('Invalid token or user ID.');
+        }
+
+        // Update user to verified
+        const user = await Model.findByIdAndUpdate(userId, { verified: true }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        res.status(200).json({ message: 'Email successfully verified!' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 
 module.exports = {
     login,
@@ -158,4 +193,5 @@ module.exports = {
     deleteData,
     getUsersWithAttendanceBySchedId,
     getUsersWithAttendance,
+    verifyEmail
 }

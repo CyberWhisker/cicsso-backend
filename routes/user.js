@@ -1,6 +1,6 @@
 const express = require('express')
 const multer  = require('multer')
-const {login, register, verifyUser, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction} = require('../controllers/UserController')
+const {login, register, verifyEmail, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction} = require('../controllers/UserController')
 const router = express.Router();
 
 // Multer Setup
@@ -22,8 +22,8 @@ router.post('/login', login)
 //User Registration
 router.post('/register', register)
 
-//User Verify
-router.post('/verify', verifyUser)
+// Verify Email
+router.get('/verify', verifyEmail);
 
 //Get All Users
 router.get('/', getUsers)

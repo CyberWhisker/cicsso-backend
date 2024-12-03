@@ -138,12 +138,9 @@ const getCollectionBySchoolYear = async (req, res) => {
 }
 
 const getCollectionWithEventsAndAttendance = async (req, res) => {
-    // const data = await Model.find({}).sort({createdAt: -1})
-    const { id } = req.params
     const data = await Model.find({}).populate({
         path: 'transaction',
         model: 'Transaction',
-        match: { userId: id },
         options: { limit: 1 }
     }).populate({
         path: 'eventId',
@@ -154,7 +151,52 @@ const getCollectionWithEventsAndAttendance = async (req, res) => {
             populate: {
                 path: 'attendances',
                 model: 'Attendance',
-                match: { user: id }
+            }
+        }
+    })
+    res.status(200).json(data)
+}
+
+const getDataWithTransactionBySchoolYearId = async (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+
+    const data = await Model.find({ schoolYearId: id })
+        .populate({
+            path: 'transaction',
+            model: 'Transaction'
+        })
+        .populate({
+            path: 'project',
+            model: 'Project',
+            populate: {
+                path: 'items',
+                model: 'Item'
+            }
+        })
+    res.status(200).json(data)
+}
+
+const getDataBySchoolYearAndUserId = async (req, res) => {
+    const { schoolYear, userId } = req.params
+    const data = await Model.find({schoolYearId: schoolYear}).populate({
+        path: 'transaction',
+        model: 'Transaction',
+        match: { userId: userId },
+        options: { limit: 1 }
+    }).populate({
+        path: 'eventId',
+        model: 'Event',
+        populate: {
+            path: 'schedules',
+            model: 'Schedule',
+            populate: {
+                path: 'attendances',
+                model: 'Attendance',
+                match: { user: userId }
             }
         }
     })
@@ -170,5 +212,7 @@ module.exports = {
     getCollectionWithTransactionByUserId,
     getCollectionBySchoolYear,
     getCollectionWithEventsAndAttendance,
-    getCollectionWithTransaction
+    getCollectionWithTransaction,
+    getDataWithTransactionBySchoolYearId,
+    getDataBySchoolYearAndUserId
 }

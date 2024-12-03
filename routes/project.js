@@ -1,10 +1,12 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData } = require('../controllers/ProjectController');
+const { storeData, getData, getDataById, deleteData, updateData, getDataBySchoolYearId } = require('../controllers/ProjectController');
 
 const router = express.Router();
 
 //Get all
 router.get('/', getData)
+
+router.get('/getDataBySchoolYearId/:id', getDataBySchoolYearId)
 
 //Get Single
 router.get('/:id', getDataById)

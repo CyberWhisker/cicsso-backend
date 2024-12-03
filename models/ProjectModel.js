@@ -12,6 +12,10 @@ const ProjectSchema = new Schema({
         ref: "Collection",
         required: true
     },
+    schoolYearId: {
+        type: Schema.Types.ObjectId,
+        ref: 'SchoolYear',
+    },
     status: {
         type: String,
         default: 'Ongoing'
