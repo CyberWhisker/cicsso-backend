@@ -14,19 +14,15 @@ const ScheduleSchema = new Schema({
     },
     amIn: {
         type: Date,
-        required: true
     },
     amOut: {
         type: Date,
-        required: true
     },
     pmIn: {
         type: Date,
-        required: true
     },
     pmOut: {
         type: Date,
-        required: true
     },
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
