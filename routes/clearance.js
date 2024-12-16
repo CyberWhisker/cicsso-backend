@@ -1,5 +1,5 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, fetchClearanceByUserandSchoolYear, getClearanceByUserId } = require('../controllers/ClearanceController');
+const { storeData, getData, getDataById, deleteData, updateData, fetchClearanceByUserandSchoolYear, getClearanceByUserId, updateSelectedClearance } = require('../controllers/ClearanceController');
 
 const router = express.Router();
 
@@ -21,6 +21,10 @@ router.post('/', storeData)
 router.delete('/:id', deleteData)
 
 //Update Request
+router.patch('/updateSelectedClearance', updateSelectedClearance)
+
+//Update Request
 router.patch('/:id', updateData)
+
 
 module.exports = router

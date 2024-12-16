@@ -13,19 +13,19 @@ const getData = async (req, res) => {
                 populate: {
                     path: 'eventId',
                     model: 'Event',
-                    populate: {
-                        path: 'schedules',
-                        model: 'Schedule',
-                        populate: {
-                            path: 'attendances',
-                            model: 'Attendance',
-                        }
-                    }
+                    // populate: {
+                    //     path: 'schedules',
+                    //     model: 'Schedule',
+                    //     populate: {
+                    //         path: 'attendances',
+                    //         model: 'Attendance',
+                    //     }
+                    // }
                 },
-                populate: {
-                    path: 'transaction',
-                    model: 'Transaction'
-                }
+                // populate: {
+                //     path: 'transaction',
+                //     model: 'Transaction'
+                // }
             },
             {
                 path: 'signatories',
@@ -126,6 +126,24 @@ const updateData = async (req, res) => {
     res.status(200).json(req.body)
 }
 
+//Update Data
+const updateSelectedClearance = async (req, res) => {
+    const { status, usersId } = req.body
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //     return res.status(404).json({ error: 'Not valid ID' })
+    // }
+
+    const data = await Model.updateMany({ _id: usersId }, {
+        status: status
+    })
+
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
+    }
+
+    res.status(200).json(req.body)
+}
+
 const fetchClearanceByUserandSchoolYear = async (req, res) => {
     const { user, schoolYear } = req.params
 
@@ -152,5 +170,6 @@ module.exports = {
     deleteData,
     updateData,
     fetchClearanceByUserandSchoolYear,
-    getClearanceByUserId
+    getClearanceByUserId,
+    updateSelectedClearance
 }
