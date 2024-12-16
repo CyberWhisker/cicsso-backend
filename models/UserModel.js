@@ -4,44 +4,43 @@ const bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
-    firstName : {
+    firstName: {
         type: String,
         required: true
     },
-    middleName : {
+    middleName: {
+        type: String,
+    },
+    lastName: {
         type: String,
         required: true
     },
-    lastName : {
-        type: String,
-        required: true
-    },
-    extensionName : {
+    extensionName: {
         type: String
     },
-    studentId : {
+    studentId: {
         type: String,
         required: true
     },
-    program : {
+    program: {
         type: String,
         required: true
     },
-    type : {
+    type: {
         type: String,
         required: true
     },
-    year : {
+    year: {
         type: String,
         required: true
     },
-    section : {
+    section: {
         type: String,
         required: true
-    }, 
-    role : {
+    },
+    role: {
         type: String
-    }, 
+    },
     email: {
         type: String,
         required: true,
@@ -51,19 +50,19 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    image : {
+    image: {
         type: String
     },
     verified: {
         type: Boolean,
         default: false
     }
-}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true }  })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
 // Static register method
-UserSchema.statics.registerHash = async function(formData) {
-    const {email, password} = formData
-    const exists = await this.findOne({email})
+UserSchema.statics.registerHash = async function (formData) {
+    const { email, password } = formData
+    const exists = await this.findOne({ email })
 
     if (exists) {
         throw Error('Email already in use')
@@ -81,10 +80,10 @@ UserSchema.statics.registerHash = async function(formData) {
     return user
 }
 
-UserSchema.statics.loginHash = async function(email, password) {
-    const user = await this.findOne({email})
+UserSchema.statics.loginHash = async function (email, password) {
+    const user = await this.findOne({ email })
 
-    if(!user) {
+    if (!user) {
         throw Error('Invalid Email')
     }
 

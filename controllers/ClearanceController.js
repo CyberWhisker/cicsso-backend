@@ -7,8 +7,30 @@ const getData = async (req, res) => {
         path: 'schoolYear',
         model: 'SchoolYear',
         populate: [
-            { path: 'collection', model: 'Collection' },
-            { path: 'signatories', model: 'Signatories' }
+            {
+                path: 'collection',
+                model: 'Collection',
+                populate: {
+                    path: 'eventId',
+                    model: 'Event',
+                    populate: {
+                        path: 'schedules',
+                        model: 'Schedule',
+                        populate: {
+                            path: 'attendances',
+                            model: 'Attendance',
+                        }
+                    }
+                },
+                populate: {
+                    path: 'transaction',
+                    model: 'Transaction'
+                }
+            },
+            {
+                path: 'signatories',
+                model: 'Signatories'
+            }
         ]
 
     }).sort({ createdAt: -1 })
