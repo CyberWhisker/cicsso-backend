@@ -121,20 +121,17 @@ const getCollectionWithTransactionByUserId = async (req, res) => {
 
 const getCollectionBySchoolYear = async (req, res) => {
     const { id } = req.params
-
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.findOne({ schoolYearId: id }, {
-        ...req.body
-    })
+    const data = await Model.find({ schoolYearId: id })
 
     if (!data) {
         return res.status(404).json({ error: 'No record found' })
     }
 
-    res.status(200).json(req.body)
+    res.status(200).json(data)
 }
 
 const getCollectionWithEventsAndAttendance = async (req, res) => {
@@ -182,7 +179,7 @@ const getDataWithTransactionBySchoolYearId = async (req, res) => {
 
 const getDataBySchoolYearAndUserId = async (req, res) => {
     const { schoolYear, userId } = req.params
-    const data = await Model.find({schoolYearId: schoolYear}).populate({
+    const data = await Model.find({ schoolYearId: schoolYear }).populate({
         path: 'transaction',
         model: 'Transaction',
         match: { userId: userId },
