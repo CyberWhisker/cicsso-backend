@@ -119,6 +119,7 @@ const getCollectionWithTransactionByUserId = async (req, res) => {
     res.status(200).json(data)
 }
 
+// new Update
 const getCollectionBySchoolYear = async (req, res) => {
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id)) {
