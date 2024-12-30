@@ -98,7 +98,7 @@ const getCollectionWithTransaction = async (req, res) => {
 const getCollectionWithTransactionByUserId = async (req, res) => {
     // const data = await Model.find({}).sort({createdAt: -1})
     const { id } = req.params
-    const data = await Model.find({}).populate({
+    const data = await Model.find({ schoolYearId: id }).populate({
         path: 'transaction',
         model: 'Transaction',
         match: { userId: id },
@@ -127,6 +127,18 @@ const getCollectionBySchoolYear = async (req, res) => {
     }
 
     const data = await Model.find({ schoolYearId: id })
+        .populate({
+            path: 'transaction',
+            model: 'Transaction'
+        })
+        .populate({
+            path: 'project',
+            model: 'Project',
+            populate: {
+                path: 'items',
+                model: 'Item'
+            }
+        })
 
     if (!data) {
         return res.status(404).json({ error: 'No record found' })
@@ -136,6 +148,10 @@ const getCollectionBySchoolYear = async (req, res) => {
 }
 
 const getCollectionWithEventsAndAttendance = async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
     const data = await Model.find({}).populate({
         path: 'transaction',
         model: 'Transaction',

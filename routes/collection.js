@@ -8,7 +8,7 @@ router.get('/', getData)
 
 router.get('/getCollectionWithTransaction', getCollectionWithTransaction)
 
-router.get('/getCollectionWithEventsAndAttendance', getCollectionWithEventsAndAttendance)
+router.get('/getCollectionWithEventsAndAttendance/:id', getCollectionWithEventsAndAttendance)
 
 router.get('/getDataBySchoolYearAndUserId/:schoolYear/:userId', getDataBySchoolYearAndUserId)
 
