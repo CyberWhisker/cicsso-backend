@@ -7,6 +7,9 @@ const EventSchema = new Schema({
         type: String,
         required: true
     },
+    schoolYearId: {
+        type: Schema.Types.ObjectId,
+    },
     startDate: {
         type: Date,
         required: true
@@ -18,7 +21,7 @@ const EventSchema = new Schema({
     image: {
         type: String
     }
-}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true }  })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
 // Virtual field
 EventSchema.virtual('schedules', {

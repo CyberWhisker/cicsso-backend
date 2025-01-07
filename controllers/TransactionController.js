@@ -12,23 +12,23 @@ const getData = async (req, res) => {
 
 //Get Data by status
 const getDataByStatus = async (req, res) => {
-    const {status} = req.params
-    const data = await Model.find({status: status})
+    const { status } = req.params
+    const data = await Model.find({ status: status })
     res.status(200).json(data)
 }
 
 //Get Single Data
 const getDataById = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.find({_id: id})
+    const data = await Model.find({ _id: id })
 
-    if(!data) {
-        return res.status(404).json({error: 'No record found'})
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
     }
 
     res.status(200).json(data)
@@ -36,16 +36,16 @@ const getDataById = async (req, res) => {
 
 //Get Single Data
 const getDataByCollectionId = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.find({collectionId: id})
+    const data = await Model.find({ collectionId: id }).sort({ createdAt: -1 })
 
-    if(!data) {
-        return res.status(404).json({error: 'No record found'})
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
     }
 
     res.status(200).json(data)
@@ -54,37 +54,36 @@ const getDataByCollectionId = async (req, res) => {
 //Post Data
 const storeData = async (req, res) => {
     try {
-      const data = await Model.create({
-        ...req.body,
-        image: req.file ? req.file.filename : null
-      });
+        const data = await Model.create({
+            ...req.body,
+            image: req.file ? req.file.filename : null
+        });
 
-      const dataForm = {
-        userId: data.userId,
-        transactionId: data._id,
-        message: "Transaction has been Submitted"
-      }
-      await storeNotification(dataForm)
+        const dataForm = {
+            userId: data.userId,
+            transactionId: data._id,
+            message: "Transaction has been Submitted"
+        }
+        await storeNotification(dataForm)
 
-      res.status(200).json(data);
+        res.status(200).json(data);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
 };
 
 //Delete Data
 const deleteData = async (req, res) => {
-    const {id} = req.params
-    const {message} = req.body
-
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    const { id } = req.params
+    const { message } = req.body
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.findOneAndDelete({_id: id})
+    const data = await Model.findOneAndDelete({ _id: id })
 
     if (!data) {
-        return res.status(404).json({error: 'No record found'})
+        return res.status(404).json({ error: 'No record found' })
     }
 
     const dataForm = {
@@ -94,30 +93,30 @@ const deleteData = async (req, res) => {
 
     await storeNotification(dataForm)
 
-    res.status(200).json({message: 'Successfully Deleted'})
+    res.status(200).json({ message: 'Successfully Deleted' })
 }
 
 //Update Data
 const updateData = async (req, res) => {
-    const {id} = req.params
-    const {image} = req.body;
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    const { id } = req.params
+    const { image, message } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.findOneAndUpdate({_id: id}, {
+    const data = await Model.findOneAndUpdate({ _id: id }, {
         ...req.body,
         image: req.file ? req.file.filename : image
     })
 
     if (!data) {
-        return res.status(404).json({error: 'No record found'})
+        return res.status(404).json({ error: 'No record found' })
     }
 
     const dataForm = {
         userId: data.userId,
         transactionId: data._id,
-        message: "Transaction has been Updated"
+        message: message || "Transaction has been Updated"
     }
     await storeNotification(dataForm)
 
@@ -126,16 +125,16 @@ const updateData = async (req, res) => {
 
 //Get Transaction by User ID
 const getDataByUserId = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'Not valid ID'})
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
     }
 
-    const data = await Model.find({userId: id}).populate('userId').populate('collectionId')
+    const data = await Model.find({ userId: id }).populate('userId').populate('collectionId')
 
-    if(!data) {
-        return res.status(404).json({error: 'No record found'})
+    if (!data) {
+        return res.status(404).json({ error: 'No record found' })
     }
 
     res.status(200).json(data)

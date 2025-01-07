@@ -152,7 +152,7 @@ const getCollectionWithEventsAndAttendance = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: 'Not valid ID' })
     }
-    const data = await Model.find({}).populate({
+    const data = await Model.find({ schoolYearId: id }).populate({
         path: 'transaction',
         model: 'Transaction',
         options: { limit: 1 }

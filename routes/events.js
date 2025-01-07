@@ -1,10 +1,12 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, fetchEventsWithAttendanceByUserId } = require('../controllers/EventController');
+const { storeData, getData, getDataById, deleteData, updateData, fetchEventsWithAttendanceByUserId, getEventBySchoolYear } = require('../controllers/EventController');
 
 const router = express.Router();
 
 //Get all
 router.get('/', getData)
+
+router.get('/getEventBySchoolYear/:id', getEventBySchoolYear)
 
 router.get('/fetchEventsWithAttendanceByUserId/:id', fetchEventsWithAttendanceByUserId)
 
