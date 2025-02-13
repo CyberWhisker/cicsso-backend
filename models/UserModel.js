@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
+    academicYear: {
+        type: Schema.Types.ObjectId
+    },
     firstName: {
         type: String,
         required: true
@@ -39,7 +42,8 @@ const UserSchema = new Schema({
         required: true
     },
     role: {
-        type: String
+        type: String,
+        default: 'user'
     },
     email: {
         type: String,
@@ -56,6 +60,10 @@ const UserSchema = new Schema({
     verified: {
         type: Boolean,
         default: false
+    },
+    status: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 

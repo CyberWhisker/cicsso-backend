@@ -42,7 +42,7 @@ const login = async (req, res) => {
 }
 
 const register = async (req, res) => {
-    const {email} = req.body
+    const { email } = req.body
     try {
         const user = await Model.registerHash(req.body)
         const token = createToken(user._id)
@@ -52,6 +52,62 @@ const register = async (req, res) => {
         await sendVerificationEmail(email, user._id, verificationToken);
 
         res.status(200).json({ token, message: 'User registered successfully. Please check your email to verify your account.', user: { _id: user._id, email: user.email, role: user.role } })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+}
+
+const storeMultipleUsers = async (req, res) => {
+    const defaultPassword = 'marsu2024'
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(defaultPassword, salt)
+    try {
+        const { users, academicYear } = req.body;
+
+        // Extract all StudentIDs from the provided users list
+        const studentIds = users.map(user => user.StudentID);
+
+        const usersWithAcademicYear = users.map(user => ({
+            updateOne: {
+                filter: {
+                    studentId: user.StudentID
+                },
+                update: {
+                    $set: {
+                        academicYear,
+                        firstName: user.FirstName,
+                        middleName: user.MiddleName,
+                        lastName: user.LastName,
+                        extensionName: user.ExtensionName,
+                        studentId: user.StudentID,
+                        program: user.Program,
+                        year: user.Year,
+                        section: user.Section,
+                        email: user.Email,
+                        verified: true,
+                        status: true,
+                    },
+                    $setOnInsert: {
+                        password: hash,
+                        type: user.Type
+                    }
+                },
+
+                upsert: true
+
+            }
+        }));
+
+        // Bulk insert users
+        const insertedUsers = await Model.bulkWrite(usersWithAcademicYear);
+
+        // Update status of users who are NOT in the current users list
+        await Model.updateMany(
+            { studentId: { $nin: studentIds } }, // Find users NOT in the provided list
+            { $set: { status: false } } // Set their status to 0
+        );
+
+        res.status(201).json({ success: true, data: insertedUsers });
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -193,5 +249,6 @@ module.exports = {
     deleteData,
     getUsersWithAttendanceBySchedId,
     getUsersWithAttendance,
-    verifyEmail
+    verifyEmail,
+    storeMultipleUsers
 }

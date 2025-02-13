@@ -1,6 +1,6 @@
 const express = require('express')
-const multer  = require('multer')
-const {login, register, verifyEmail, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction} = require('../controllers/UserController')
+const multer = require('multer')
+const { login, register, verifyEmail, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction, storeMultipleUsers } = require('../controllers/UserController')
 const router = express.Router();
 
 // Multer Setup
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + file.originalname)
   }
 })
-  
+
 const upload = multer({ storage: storage })
 
 //User Login
@@ -21,6 +21,9 @@ router.post('/login', login)
 
 //User Registration
 router.post('/register', register)
+
+//Store Multiple Users
+router.post('/storeMultipleUsers', storeMultipleUsers)
 
 // Verify Email
 router.get('/verify', verifyEmail);
