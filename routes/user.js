@@ -1,6 +1,6 @@
 const express = require('express')
 const multer = require('multer')
-const { login, register, verifyEmail, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction, storeMultipleUsers } = require('../controllers/UserController')
+const { login, register, verifyEmail, getUsers, getUserById, deleteData, updateData, getUsersWithAttendanceBySchedId, getUsersWithAttendance, getUserWithTransaction, storeMultipleUsers, getUsersWithTransactionByAY } = require('../controllers/UserController')
 const router = express.Router();
 
 // Multer Setup
@@ -33,6 +33,9 @@ router.get('/', getUsers)
 
 //Get Users with Attendance
 router.get('/getUsersWithAttendance', getUsersWithAttendance)
+
+router.get('/getUsersWithTransactionByAY/:id', getUsersWithTransactionByAY)
+
 router.get('/getUsersWithAttendanceBySchedId/:id', getUsersWithAttendanceBySchedId)
 
 //Get User
