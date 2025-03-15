@@ -132,6 +132,10 @@ const getCollectionBySchoolYear = async (req, res) => {
             model: 'Transaction'
         })
         .populate({
+            path: 'schoolYearId',
+            model: 'SchoolYear'
+        })
+        .populate({
             path: 'project',
             model: 'Project',
             populate: {
@@ -167,7 +171,7 @@ const getCollectionWithEventsAndAttendance = async (req, res) => {
                 model: 'Attendance',
             }
         }
-    })
+    }).populate('schoolYearId')
     res.status(200).json(data)
 }
 
