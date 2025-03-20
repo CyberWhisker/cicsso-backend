@@ -1,5 +1,5 @@
 const express = require('express')
-const { storeData, getData, getDataById, deleteData, updateData, getCollectionWithTransactionByUserId, getCollectionBySchoolYear, getCollectionWithEventsAndAttendance, getCollectionWithTransaction, getDataWithTransactionBySchoolYearId, getDataBySchoolYearAndUserId } = require('../controllers/CollectionController');
+const { storeData, getData, getDataById, deleteData, updateData, getCollectionWithTransactionByUserId, getCollectionBySchoolYear, getCollectionWithEventsAndAttendance, getCollectionWithTransaction, getDataWithTransactionBySchoolYearId, getDataBySchoolYearAndUserId, getCollectionBySchoolYearWithRemainingBalance } = require('../controllers/CollectionController');
 
 const router = express.Router();
 
@@ -17,6 +17,8 @@ router.get('/getDataWithTransactionBySchoolYearId/:id', getDataWithTransactionBy
 router.get('/getCollectionWithTransactionByUserId/:id', getCollectionWithTransactionByUserId)
 
 router.get('/getCollectionBySchoolYear/:id', getCollectionBySchoolYear)
+
+router.get('/getCollectionBySchoolYearWithRemainingBalance/:id', getCollectionBySchoolYearWithRemainingBalance)
 
 
 //Get Single

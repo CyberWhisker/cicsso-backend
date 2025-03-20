@@ -125,11 +125,68 @@ const getDataBySchoolYearId = async (req, res) => {
     res.status(200).json(data)
 }
 
+const getProjectBySchoolYearIdWithRemainder = async (req, res) => {
+    const { id } = req.params
+    // const id = '677c832857fbaf651efdc933'
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+
+    const data = await Model.find({ schoolYearId: id })
+        .populate({
+            path: 'collectionId',
+            model: 'Collection',
+            populate: [
+                {
+                    path: 'transaction',
+                    model: 'Transaction'
+                },
+                {
+                    path: 'project',
+                    model: 'Project',
+                    populate: {
+                        path: 'items',
+                        model: 'Item'
+                    }
+                }
+            ]
+        })
+        .populate('items');
+
+    const formattedData = data.map((item) => {
+        let totalProject = 0;
+        const totalTrans = item.collectionId.transaction?.reduce(
+            (acc, curr) => acc + (curr.amount || 0), // Make sure to access the correct field
+            0
+        ) ?? 0;
+        const totalProjectAll = item.collectionId.project.map((item) => {
+            const totalItems = item.items?.reduce(
+                (acc, curr) => acc + curr.amount * curr.quantity, 0
+            ) ?? 0;
+            totalProject += totalItems;
+        });
+        const currentTotalProject = item.items?.reduce((acc, curr) => acc + curr.amount * curr.quantity, 0) ?? 0;
+        return {
+            _id: item._id,
+            project: item.project,
+            status: item.status,
+            collectionId: item.collectionId._id,
+            collectionName: item.collectionId.collectionName,
+            totalProject: currentTotalProject,
+            remaining: totalTrans - totalProject,
+        }
+    })
+
+    res.status(200).json(formattedData)
+}
+
 module.exports = {
     getData,
     getDataById,
     storeData,
     deleteData,
     updateData,
-    getDataBySchoolYearId
+    getDataBySchoolYearId,
+    getProjectBySchoolYearIdWithRemainder
 }

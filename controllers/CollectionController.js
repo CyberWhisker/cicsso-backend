@@ -221,6 +221,90 @@ const getDataBySchoolYearAndUserId = async (req, res) => {
     res.status(200).json(data)
 }
 
+const getCollectionBySchoolYearWithRemainingBalance = async (req, res) => {
+    const { id } = req.params
+    // const id = '677c832857fbaf651efdc933'
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'Not valid ID' })
+    }
+
+    const data = await Model.aggregate([
+        { $match: { schoolYearId: new mongoose.Types.ObjectId(id) } },
+        {
+            $lookup: {
+                from: 'projects', // Name of the `Project` collection
+                localField: '_id',
+                foreignField: 'collectionId',
+                as: 'project',
+            }
+        },
+        {
+            $unwind: {
+                path: '$project',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: 'items', // Join items based on project ID
+                localField: 'project._id',
+                foreignField: 'project',
+                as: 'project.items'
+            }
+        },
+        {
+            $addFields: {
+                'project.totalAmount': {
+                    $sum: {
+                        $map: {
+                            input: '$project.items',
+                            as: 'item',
+                            in: { $multiply: ['$$item.quantity', '$$item.amount'] } // Multiply quantity * amount
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $group: {
+                _id: '$_id',
+                schoolYearId: { $first: '$schoolYearId' },
+                collectionName: { $first: '$collectionName' },
+                project: { $push: '$project' }
+            }
+        },
+        {
+            $lookup: {
+                from: 'transactions',
+                localField: '_id',
+                foreignField: 'collectionId',
+                as: 'transaction'
+            }
+        },
+        {
+            $addFields: {
+                projectTotal: { $sum: '$project.totalAmount' },
+                transactionTotal: { $sum: '$transaction.amount' },
+                remainingBalance: {
+                    $subtract: [{ $sum: '$transaction.amount' }, { $sum: '$project.totalAmount' }]
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                collectionName: 1,
+                projectTotal: 1,
+                transactionTotal: 1,
+                remainingBalance: 1
+            }
+        }
+    ]);
+
+    res.status(200).json(data)
+};
+
 module.exports = {
     getData,
     getDataById,
@@ -232,5 +316,6 @@ module.exports = {
     getCollectionWithEventsAndAttendance,
     getCollectionWithTransaction,
     getDataWithTransactionBySchoolYearId,
-    getDataBySchoolYearAndUserId
+    getDataBySchoolYearAndUserId,
+    getCollectionBySchoolYearWithRemainingBalance
 }

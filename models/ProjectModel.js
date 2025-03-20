@@ -20,9 +20,6 @@ const ProjectSchema = new Schema({
         type: String,
         default: 'Ongoing'
     },
-    description: {
-        type: String,
-    },
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
 // Virtual field
