@@ -140,7 +140,8 @@ const getProjectBySchoolYearIdWithRemainder = async (req, res) => {
             populate: [
                 {
                     path: 'transaction',
-                    model: 'Transaction'
+                    model: 'Transaction',
+                    match: { status: 'confirm' }
                 },
                 {
                     path: 'project',

@@ -129,7 +129,8 @@ const getCollectionBySchoolYear = async (req, res) => {
     const data = await Model.find({ schoolYearId: id })
         .populate({
             path: 'transaction',
-            model: 'Transaction'
+            model: 'Transaction',
+            match: { status: 'confirm' }
         })
         .populate({
             path: 'schoolYearId',
@@ -203,6 +204,7 @@ const getDataBySchoolYearAndUserId = async (req, res) => {
     const data = await Model.find({ schoolYearId: schoolYear }).populate({
         path: 'transaction',
         model: 'Transaction',
+        match: { status: 'confirm' },
         match: { userId: userId },
         options: { limit: 1 }
     }).populate({
@@ -223,87 +225,52 @@ const getDataBySchoolYearAndUserId = async (req, res) => {
 
 const getCollectionBySchoolYearWithRemainingBalance = async (req, res) => {
     const { id } = req.params
-    // const id = '677c832857fbaf651efdc933'
+    // const id = '677c832857fbaf651efdc933';
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'Not valid ID' })
+        return res.status(404).json({ error: 'Not valid ID' });
     }
 
-    const data = await Model.aggregate([
-        { $match: { schoolYearId: new mongoose.Types.ObjectId(id) } },
-        {
-            $lookup: {
-                from: 'projects', // Name of the `Project` collection
-                localField: '_id',
-                foreignField: 'collectionId',
-                as: 'project',
+    const data = await Model.find({ schoolYearId: id })
+        .populate({
+            path: 'project',
+            model: 'Project',
+            populate: {
+                path: 'items',
+                model: 'Item'
             }
-        },
-        {
-            $unwind: {
-                path: '$project',
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $lookup: {
-                from: 'items', // Join items based on project ID
-                localField: 'project._id',
-                foreignField: 'project',
-                as: 'project.items'
-            }
-        },
-        {
-            $addFields: {
-                'project.totalAmount': {
-                    $sum: {
-                        $map: {
-                            input: '$project.items',
-                            as: 'item',
-                            in: { $multiply: ['$$item.quantity', '$$item.amount'] } // Multiply quantity * amount
-                        }
-                    }
-                }
-            }
-        },
-        {
-            $group: {
-                _id: '$_id',
-                schoolYearId: { $first: '$schoolYearId' },
-                collectionName: { $first: '$collectionName' },
-                project: { $push: '$project' }
-            }
-        },
-        {
-            $lookup: {
-                from: 'transactions',
-                localField: '_id',
-                foreignField: 'collectionId',
-                as: 'transaction'
-            }
-        },
-        {
-            $addFields: {
-                projectTotal: { $sum: '$project.totalAmount' },
-                transactionTotal: { $sum: '$transaction.amount' },
-                remainingBalance: {
-                    $subtract: [{ $sum: '$transaction.amount' }, { $sum: '$project.totalAmount' }]
-                }
-            }
-        },
-        {
-            $project: {
-                _id: 1,
-                collectionName: 1,
-                projectTotal: 1,
-                transactionTotal: 1,
-                remainingBalance: 1
-            }
-        }
-    ]);
+        })
+        .populate({
+            path: 'transaction',
+            model: 'Transaction',
+            match: { status: 'confirm' }
+        })
 
-    res.status(200).json(data)
+
+    const formattedData = data.map((item) => {
+        let projectTotal = 0;
+        let transactionTotal = 0;
+        item.project.map((project) => {
+            projectTotal += project.items.reduce((acc, curr) => {
+                return acc + (curr.quantity * curr.amount);
+            }, 0);
+        })
+        transactionTotal = item.transaction.reduce((acc, curr) => acc + curr.amount, 0)
+        return {
+            _id: item._id,
+            collectionName: item.collectionName,
+            projectTotal,
+            transactionTotal,
+            remainingBalance: transactionTotal - projectTotal
+        }
+    })
+
+    // console.log(JSON.stringify(formattedData, null, 2));
+    res.status(200).json(formattedData);
 };
+
+
+// getCollectionBySchoolYearWithRemainingBalance()
 
 module.exports = {
     getData,
