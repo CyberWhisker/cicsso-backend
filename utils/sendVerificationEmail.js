@@ -21,7 +21,7 @@ const sendVerificationEmail = async (email, userId, token) => {
             subject: 'Verify Your Email Address',
             html: `
                 <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
-                    <h2>Welcome to Our App!</h2>
+                    <h2>Welcome to CICSO APP!</h2>
                     <p>Thank you for registering. Please verify your email address by clicking the link below:</p>
                     <a href="${verificationLink}" style="color: #007BFF;">Verify Email</a>
                     <p>If you did not register for an account, please ignore this email.</p>
