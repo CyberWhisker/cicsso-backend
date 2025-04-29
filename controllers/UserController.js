@@ -58,60 +58,67 @@ const register = async (req, res) => {
 }
 
 const storeMultipleUsers = async (req, res) => {
-    const defaultPassword = 'marsu2024'
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(defaultPassword, salt)
+    const defaultPassword = 'marsu2024';
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(defaultPassword, salt);
+
     try {
         const { users, academicYear } = req.body;
 
-        // Extract all StudentIDs from the provided users list
-        const studentIds = users.map(user => user.StudentID);
+        if (!users || !Array.isArray(users) || users.length === 0) {
+            return res.status(400).json({ error: 'No users provided for upload.' });
+        }
 
-        const usersWithAcademicYear = users.map(user => ({
+        // Check and sanitize each user
+        const sanitizedUsers = users.filter(user => user.StudentID && user.Email); // Only allow valid entries
+        if (sanitizedUsers.length !== users.length) {
+            console.warn('Some users were skipped due to missing required fields.');
+        }
+
+        const studentIds = sanitizedUsers.map(user => user.StudentID);
+
+        const usersWithAcademicYear = sanitizedUsers.map(user => ({
             updateOne: {
-                filter: {
-                    studentId: user.StudentID
-                },
+                filter: { studentId: user.StudentID },
                 update: {
                     $set: {
                         academicYear,
-                        firstName: user.FirstName,
-                        middleName: user.MiddleName,
-                        lastName: user.LastName,
-                        extensionName: user.ExtensionName,
+                        firstName: user.firstName || '',
+                        middleName: user.middleName || '',
+                        lastName: user.lastName || '',
+                        extensionName: user.ExtensionName || '',
                         studentId: user.StudentID,
-                        program: user.Program,
-                        year: user.Year,
-                        section: user.Section,
+                        program: user.Program || '',
+                        year: user.Year || '',
+                        section: user.Section || '',
                         email: user.Email,
                         verified: true,
                         status: true,
                     },
                     $setOnInsert: {
                         password: hash,
-                        type: user.Type
+                        type: user.Type || 'student' // default to 'student' if Type missing
                     }
                 },
-
                 upsert: true
-
             }
         }));
 
-        // Bulk insert users
-        const insertedUsers = await Model.bulkWrite(usersWithAcademicYear);
+        // Bulk insert/update users
+        const insertedUsers = await Model.bulkWrite(usersWithAcademicYear, { ordered: false }); // ordered: false = continue even if some fail
 
-        // Update status of users who are NOT in the current users list
+        // Update status of users who are not in the current list
         await Model.updateMany(
-            { studentId: { $nin: studentIds } }, // Find users NOT in the provided list
-            { $set: { status: false } } // Set their status to 0
+            { studentId: { $nin: studentIds } },
+            { $set: { status: false } }
         );
 
-        res.status(201).json({ success: true, data: insertedUsers });
+        res.status(201).json({ success: true, insertedCount: insertedUsers.nUpserted + insertedUsers.nModified });
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        console.error('Bulk upload error:', error);
+        res.status(500).json({ error: error.message || 'Something went wrong during bulk upload.' });
     }
-}
+};
 
 const verifyUser = async (req, res) => {
     const { token } = req.body
