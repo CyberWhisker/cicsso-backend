@@ -1,19 +1,19 @@
 const express = require('express')
-const multer  = require('multer')
+const multer = require('multer')
 const { storeData, getData, deleteData, updateData, getSignatoriesBySchoolYear } = require('../controllers/SignatoriesController');
 
 const router = express.Router();
 
 // Multer Setup
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, '../cicsso/public/signatureImg/')
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now()
-      cb(null, uniqueSuffix + file.originalname)
-    }
-  })
+  destination: function (req, file, cb) {
+    cb(null, '../cicsso/public/signatureImg/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now()
+    cb(null, uniqueSuffix + file.originalname)
+  }
+})
 
 const upload = multer({ storage: storage })
 
