@@ -98,14 +98,14 @@ const deleteData = async (req, res) => {
 //Update Data
 const updateData = async (req, res) => {
     const { id } = req.params
-    const { image, message } = req.body;
+    const { message } = req.body;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ error: 'Not valid ID' })
     }
 
     const data = await Model.findOneAndUpdate({ _id: id }, {
         ...req.body,
-        image: req.file ? req.file.filename : image
+        // image: req.file ? req.file.filename : image
     })
 
     if (!data) {
