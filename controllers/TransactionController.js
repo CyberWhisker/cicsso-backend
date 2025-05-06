@@ -56,9 +56,8 @@ const storeData = async (req, res) => {
     try {
         const data = await Model.create({
             ...req.body,
-            image: req.file ? req.file.filename : null
+            // image: req.file ? req.file.filename : null
         });
-
         const dataForm = {
             userId: data.userId,
             transactionId: data._id,
